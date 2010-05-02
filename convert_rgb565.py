@@ -67,6 +67,9 @@ def __convert_rgb565__(buffer, showImage=False):
     return img
 
 def download(host, port=31337, showImage=False):
+        __download__(host, port, showImage)
+        
+def __download__(host, port=31337, showImage=False):
     print "%s:%s" % (host, port)
 
     # 2*240*220 = 105600
@@ -84,7 +87,7 @@ def download(host, port=31337, showImage=False):
 
     data = data[:WHOLE_SIZE]
     print "Ok: %s" % len(data)
-    __convert_rgb565__(StringIO(data), showImage)
+    return __convert_rgb565__(StringIO(data), showImage)
 
 
 def main():
