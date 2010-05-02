@@ -1,9 +1,11 @@
+import logging
 import Image, sys, struct
 import socket
 from StringIO import StringIO
 from leopytools.helpers import ipython
 from optfunc import optfunc
 
+log = logging.getLogger(__name__)
 
 def convert_rgb565(filename, showImage=False, out_file=None):
     infile = open(filename, 'rb')
@@ -70,7 +72,7 @@ def download(host, port=31337, showImage=False):
         __download__(host, port, showImage)
         
 def __download__(host, port=31337, showImage=False):
-    print "%s:%s" % (host, port)
+    log.debug("downloading from: %s:%s" % (host, port))
 
     # 2*240*220 = 105600
     WHOLE_SIZE = 105600
@@ -86,7 +88,7 @@ def __download__(host, port=31337, showImage=False):
     s.close()
 
     data = data[:WHOLE_SIZE]
-    print "Ok: %s" % len(data)
+    log.info("downloaded %d bytes" % len(data))
     return __convert_rgb565__(StringIO(data), showImage)
 
 
