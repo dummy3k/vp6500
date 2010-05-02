@@ -1,17 +1,16 @@
 import Image, sys, struct
+import socket
+from StringIO import StringIO
 from leopytools.helpers import ipython
 from optfunc import optfunc
 
-def do_it(filename):
-    img = Image.new("RGB", (240, 220))
-    #~ infile = open('/tmp/blah3.bmp', 'rb')
+def convert_rgb565(filename):
     infile = open(filename, 'rb')
-    #~ infile = open('/tmp/blah4', 'rb')
-    #~ infile = open(filename, 'rb')
+    __convert_rgb565__(infile)
+    infile.close()
 
-    #~ definitely_green = (156, 11)
-    #~ definitely_blue = (47, 46)
-    #~ definitely_red = (25, 165)
+def __convert_rgb565__(buffer):
+    img = Image.new("RGB", (240, 220))
     definitely = [('green', (156, 11)),
                   ('blue',  (47, 46)),
                   ('red',  (25, 165))]
@@ -25,7 +24,7 @@ def do_it(filename):
                     definitely_color = color
                     break
                     
-            raw = infile.read(2)
+            raw = buffer.read(2)
             if not raw:
                 print "Unexpected no data"
                 return
@@ -85,12 +84,29 @@ def do_it(filename):
         #~ print raw_touple
         pass
 
-    infile.close()
     print "Hello"
-
     img.show()
 
+def download(host, port=31337):
+    print "%s:%s" % (host, port)
+
+    # 2*240*220 = 105600
+    WHOLE_SIZE = 105600
+    BUFFER_SIZE = 128
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    #~ s.send(MESSAGE)
+
+    data = s.recv(BUFFER_SIZE)
+    while (len(data) < WHOLE_SIZE):
+        data += s.recv(BUFFER_SIZE)
+    s.close()
+
+    data = data[:WHOLE_SIZE]
+    print "Ok: %s" % len(data)
+    __convert_rgb565__(StringIO(data))
 
 if __name__ == '__main__':
-    optfunc.run(do_it)
-    #~ optfunc.main([for_ever,one])
+    #~ optfunc.run(convert_rgb565)
+    optfunc.main([convert_rgb565,download])
