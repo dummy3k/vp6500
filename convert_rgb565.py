@@ -5,10 +5,15 @@ from leopytools.helpers import ipython
 from optfunc import optfunc
 
 
-def convert_rgb565(filename, showImage=False):
+def convert_rgb565(filename, showImage=False, out_file=None):
     infile = open(filename, 'rb')
-    __convert_rgb565__(infile, showImage)
+    img = __convert_rgb565__(infile, showImage)
     infile.close()
+
+    if out_file:
+        #~ ipython()()
+        img.save(out_file)
+        print "saved image: %s" % out_file
 
 def __convert_rgb565__(buffer, showImage=False):
     img = Image.new("RGB", (240, 220))
@@ -58,6 +63,8 @@ def __convert_rgb565__(buffer, showImage=False):
 
     if showImage:
         img.show()
+
+    return img
 
 def download(host, port=31337, showImage=False):
     print "%s:%s" % (host, port)
