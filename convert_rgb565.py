@@ -1,10 +1,11 @@
 import Image, sys, struct
 from leopytools.helpers import ipython
+from optfunc import optfunc
 
-def do_it():
+def do_it(filename):
     img = Image.new("RGB", (240, 220))
     #~ infile = open('/tmp/blah3.bmp', 'rb')
-    infile = open('/tmp/video1', 'rb')
+    infile = open(filename, 'rb')
     #~ infile = open('/tmp/blah4', 'rb')
     #~ infile = open(filename, 'rb')
 
@@ -89,4 +90,7 @@ def do_it():
 
     img.show()
 
-do_it()
+
+if __name__ == '__main__':
+    optfunc.run(do_it)
+    #~ optfunc.main([for_ever,one])
