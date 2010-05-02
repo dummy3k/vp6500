@@ -4,7 +4,9 @@ from leopytools.helpers import ipython
 def do_it():
     img = Image.new("RGB", (240, 220))
     #~ infile = open('/tmp/blah3.bmp', 'rb')
-    infile = open('/tmp/blah4', 'rb')
+    infile = open('/tmp/video1', 'rb')
+    #~ infile = open('/tmp/blah4', 'rb')
+    #~ infile = open(filename, 'rb')
 
     #~ definitely_green = (156, 11)
     #~ definitely_blue = (47, 46)
