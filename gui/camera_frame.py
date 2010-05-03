@@ -24,16 +24,17 @@ class ResultEvent(wx.PyEvent):
 
 class WorkerThread(Thread):
     """Worker Thread Class."""
-    def __init__(self, notify_window):
+    def __init__(self, notify_window, host):
         """Init Worker Thread Class."""
         Thread.__init__(self)
         self._notify_window = notify_window
         self.image = None
+        self.host = host
 
     def run(self):
         while True:
             log.debug("Thread downloading...")
-            img = convert_rgb565.__download__("phone.leo")
+            img = convert_rgb565.__download__(self.host)
             tmp_file = tempfile.mkstemp()[1]
             output = open(tmp_file, 'wb')
             img.save(output, 'bmp')
@@ -48,7 +49,7 @@ class WorkerThread(Thread):
 
 
 class CameraFrame(wx.Frame):
-    def __init__(self, parent=None, id=wx.ID_ANY,
+    def __init__(self, host, parent=None, id=wx.ID_ANY,
                  pos=wx.DefaultPosition):
 
         wx.Frame.__init__(self, parent, id,
@@ -56,10 +57,11 @@ class CameraFrame(wx.Frame):
                           size=(240,220), style=wx.DEFAULT_FRAME_STYLE)
         log.debug("PovPictureWindow Init")
         self.image = None
-        self.worker = WorkerThread(self)
+        self._Buffer = None
+        self.worker = WorkerThread(self, host)
         self.worker.start()
-
-        self.OnSize(None)
+		
+        #self.OnSize(None)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
@@ -68,24 +70,28 @@ class CameraFrame(wx.Frame):
 
     def OnPaint(self, event):
         log.debug("OnPaint()")
-        dc = wx.BufferedPaintDC(self, self._Buffer)
+        #dc = wx.BufferedPaintDC(self, self._Buffer)
+        self.Draw()
 
     def OnSize(self, event):
         log.debug("OnSize!")
         self.Width, self.Height = self.GetClientSizeTuple()
         self._Buffer = wx.EmptyBitmap(self.Width, self.Height)
-        self.Draw()
+#        self.Draw()
 
     def OnResult(self, event):
         log.debug("OnResult(%s)" % event.data)
         tmp_file = event.data
         
         self.image = wx.Image(tmp_file, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        os.remove(tmp_file)
+        #os.remove(tmp_file)
         self.Update()
         
     def Draw(self):
         #~ log.debug("Draw()")
+        
+        if not self._Buffer:
+            return
         dc = wx.BufferedPaintDC(self, self._Buffer)
         dc.Clear()
 
@@ -99,6 +105,9 @@ class CameraFrame(wx.Frame):
         if not event.LeftDown():
             return
 
+        self.Update()
+
+        return 
         #~ infile = open('/tmp/blah4', 'rb')
         #~ img = convert_rgb565.__convert_rgb565__(infile, False)
         #~ infile.close()
@@ -113,15 +122,14 @@ class CameraFrame(wx.Frame):
         self.image = wx.Image(tmp_file, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         os.remove(tmp_file)
 
-        self.Update()
-
+        
     def Update(self):
-        self.Draw()
+        #self.Draw()
         wx.Frame.Update(self)
 
-def main():
+def main(host):
     app = wx.App()
-    window = CameraFrame()
+    window = CameraFrame(host)
     window.Update()
     window.Show(True)
 

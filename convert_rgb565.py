@@ -68,8 +68,12 @@ def __convert_rgb565__(buffer, showImage=False):
 
     return img
 
-def download(host, port=31337, showImage=False):
-        __download__(host, port, showImage)
+def download(host, port=31337, showImage=False, out_file=None):
+    img = __download__(host, port, showImage)
+    if out_file:
+        #~ ipython()()
+        img.save(out_file)
+        print "saved image: %s" % out_file
         
 def __download__(host, port=31337, showImage=False):
     log.debug("downloading from: %s:%s" % (host, port))
