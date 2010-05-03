@@ -1,2 +1,3 @@
 *.profile
 *.pyc
+*.o
