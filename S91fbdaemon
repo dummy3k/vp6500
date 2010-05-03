@@ -1,0 +1,70 @@
+#! /bin/sh
+
+#
+# /etc/rc.d/init.d/S30telnet - Start/Stop the telnet daemon(s).
+#
+
+# Comment out the following exit line to enable this script.
+
+KILLWAIT=3
+DAEMON="fbdaemon.sh"
+DAEMONPATH="/usr/sbin"
+SHORTDAEMONID="fbdaemon"
+PORT="31337"
+
+case "$1" in
+
+    start)
+	echo "Starting ${DAEMON}"
+	/usr/sbin/micro_inetd ${PORT} ${DAEMONPATH}/${DAEMON} &
+	if [ "$?" = "0" ]; then echo "Done"
+	else                    echo "FAILED"; fi
+	;;
+
+    stop)
+	echo "Stopping ${DAEMON}"
+	PIDS=`ps -x | grep micro_inetd | grep "\W${DAEMON}\W" | cut -c 1-6`
+	if [ "${PIDS}" != "" ]; then
+		kill ${PIDS}
+		sleep ${KILLWAIT}
+		PIDS="`ps -x | grep micro_inetd | grep "\W${DAEMON}\W" | cut -c 1-6`"
+		if [ "${PIDS}" != "" ]; then
+			kill -9 ${PIDS}
+		fi
+	fi
+	if [ "$?" = "0" ]; then echo "Done"
+	else                    echo "FAILED"; fi
+	;;
+
+    stopall)
+	echo "Stopping ${DAEMON} and all child processes"
+	PIDS="`ps -x | grep micro_inetd | grep "\W${DAEMON}\W" | cut -c 1-6`"
+	PIDS="${PIDS} `ps -x | grep ${SHORTDAEMONID} | cut -c 1-6`"
+	if [ "${PIDS}" != " " ]; then
+		kill ${PIDS}
+		sleep ${KILLWAIT}
+		PIDS="`ps -x | grep micro_inetd | grep "\W${DAEMON}\W" | cut -c 1-6`"
+		PIDS="${PIDS} `ps -x | grep ${SHORTDAEMONID} | cut -c 1-6`"
+		if [ "${PIDS}" != " " ]; then
+			kill -9 ${PIDS}
+		fi
+	fi
+	if [ "$?" = "0" ]; then echo "Done"
+	else                    echo "FAILED"; fi
+	;;
+
+    restart)
+	$0 stop
+	sleep 1
+	$0 start
+	;;
+
+    *)
+	echo "Usage: $0 (start|stop|stopall|restart)"
+	exit 1
+	;;
+
+esac
+
+exit 0
+

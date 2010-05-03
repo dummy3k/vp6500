@@ -1,0 +1,7 @@
+The OV7660 CameraChip™ image sensor is a low voltage CMOS image sensor
+that provides the full functionality of a single-chip VGA camera and
+image processor in a small footprint package. The OV7660 provides
+full-frame, sub-sampled or windowed 8-bit images in a wide range of
+formats, controlled through the Serial Camera Control Bus (SCCB)
+interface. 
+http://groups.google.com/group/microdia/web/ov7660-image-sensor?pli=1
