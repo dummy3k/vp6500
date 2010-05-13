@@ -106,7 +106,7 @@ class CameraFrame(wx.Frame):
             return
 
         self.Update()
-
+        
         return 
         #~ infile = open('/tmp/blah4', 'rb')
         #~ img = convert_rgb565.__convert_rgb565__(infile, False)
@@ -124,8 +124,9 @@ class CameraFrame(wx.Frame):
 
         
     def Update(self):
-        #self.Draw()
+        self.Draw()
         wx.Frame.Update(self)
+        self.Paint()
 
 def main(host):
     app = wx.App()
