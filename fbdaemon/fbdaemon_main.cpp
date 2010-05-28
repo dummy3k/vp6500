@@ -9,21 +9,36 @@
 
 #include "camera.hpp"
 #include "rpr_redirect.hpp"
-
-const size_t camera_width = 352;
-const size_t camera_height = 288;
+#include "fbwrapper.hpp"
 
 void ex_program(int sig);
 
+int main(int argc, const char* argv[])
+{
+    signal(SIGINT, ex_program); // register clean shutdown function
+    printf("starting fbdaemon\n");
+
+    short* fb = fb_open();
+
+    int x,y;
+
+    for(x=0; x<fb_width; x++) {
+        for(y=0; y<fb_height; y++) {
+            short pixel = fb[y*camera_height+x];
+            printf("pixel at [%d, %d] is %04X\n", x,y,pixel);
+        }
+    }
+
+    fb_close();
+
+	return 0;
+}
+
+
 void ex_program(int sig) {
-	printf("Wake up call ... !!! - Catched signal: %d ... !!\n", sig);
-	disable_camera();
-	(void) signal(SIGINT, SIG_DFL);
+
+	printf("Catched signal: %d\n", sig);
+	signal(SIGINT, SIG_DFL);
 	exit(0);
 }
 
-int main(int argc, const char* argv[])
-{
-    printf("hello world\n");
-	return 0;
-}

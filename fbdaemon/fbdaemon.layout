@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="main.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="117" topLine="0" />
+	<File name="camera.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="186" topLine="0" />
+	</File>
+	<File name="camera.hpp" open="1" top="0" tabpos="5">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="fbdaemon_main.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="544" topLine="0" />
+	</File>
+	<File name="rpr_redirect.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="4331" topLine="91" />
+	</File>
+	<File name="rpr_redirect.hpp" open="1" top="0" tabpos="4">
+		<Cursor position="80" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

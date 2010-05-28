@@ -32,7 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Unit filename="Makefile" />
+		<Unit filename="camera.cpp" />
+		<Unit filename="camera.hpp" />
+		<Unit filename="fbdaemon_main.cpp" />
+		<Unit filename="rpr_redirect.cpp" />
+		<Unit filename="rpr_redirect.hpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
