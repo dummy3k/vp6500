@@ -58,6 +58,9 @@ struct _PRP_STRUCT *prp_regs;
 
 void *mem_ptr;
 
+u_int32_t backup_rgb1 = 0;
+u_int32_t backup_rgb2 = 0;
+
 // set the PRP registers, values taken from the product test script
 void set_prp(u_int32_t dest1, u_int32_t dest2)
 {
@@ -86,7 +89,17 @@ void set_prp(u_int32_t dest1, u_int32_t dest2)
 	prp_regs->PRP_CNTL = 0x2235;
 }
 
-void redirect_camera_to_fb() {
+void _redirect_camera_to_fb(int stop);
+
+void camera_redirect_start() {
+    _redirect_camera_to_fb(0);
+}
+
+void camera_redirect_stop() {
+    _redirect_camera_to_fb(0);
+}
+
+void _redirect_camera_to_fb(int stop) {
     int fd, psize, offset;
 	u_int32_t fb_base;
 	u_int32_t *fb_base_ptr;
@@ -160,7 +173,21 @@ void redirect_camera_to_fb() {
 	}
 
 	printf("prp regs base %8X\r\n", (u_int32_t)prp_regs);
-	set_prp(camera_buffer, camera_buffer);
+
+
+    if(stop == 0) {
+        printf("enabling camera redirect\n");
+
+        backup_rgb1 = prp_regs->PRP_DEST_RGB1_PTR;
+        backup_rgb2 = prp_regs->PRP_DEST_RGB2_PTR;
+        set_prp(camera_buffer, camera_buffer);
+    } else {
+        printf("disabling camera redirect\n");
+
+        set_prp(backup_rgb1, backup_rgb2);
+        backup_rgb1 = 0;
+        backup_rgb2 = 0;
+    }
 
 	msync((void*)mem_ptr, offset+132, MS_SYNC | MS_INVALIDATE);
 

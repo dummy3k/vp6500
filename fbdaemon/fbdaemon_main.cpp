@@ -20,17 +20,19 @@ int main(int argc, const char* argv[])
 
     short* fb = fb_open();
 
+    fb_backup();
+
     int x,y;
 
     for(x=0; x<fb_width; x++) {
         for(y=0; y<fb_height; y++) {
-            short pixel = fb[y*camera_height+x];
+            short pixel = fb[y*camera_width+x];
             printf("pixel at [%d, %d] is %04X\n", x,y,pixel);
         }
     }
 
+    fb_restore();
     fb_close();
-
 	return 0;
 }
 
@@ -39,6 +41,8 @@ void ex_program(int sig) {
 
 	printf("Catched signal: %d\n", sig);
 	signal(SIGINT, SIG_DFL);
+
+	fb_close();
 	exit(0);
 }
 
