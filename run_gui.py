@@ -1,3 +1,5 @@
+from optfunc import optfunc
+
 if __name__ == '__main__':
     import logging.config
     #~ logging.config.fileConfig("logging.conf")
@@ -7,4 +9,5 @@ if __name__ == '__main__':
 import gui.camera_frame
 
 if __name__ == '__main__':
-    gui.camera_frame.main()
+	optfunc.run(gui.camera_frame.main)
+#    optfunc.main([convert_rgb565,download])
