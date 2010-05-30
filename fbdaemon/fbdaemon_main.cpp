@@ -20,7 +20,7 @@ FramebufferWrapper* fbWrapper = NULL;
 int main(int argc, const char* argv[])
 {
     signal(SIGINT, ex_program); // register clean shutdown function
-//    logInfo("starting fbdaemon");
+    logDebug("starting fbdaemon");
 
     fbWrapper = new FramebufferWrapper();
 
@@ -30,7 +30,11 @@ int main(int argc, const char* argv[])
 
     unsigned int x,y;
 
-    const bool binaryMode = false;
+    const bool binaryMode = true;
+
+    if(argc == 2 && strcmp("--debug", argv[1]) == 0) {
+        binaryMode = false;
+    }
 
 /*
     for(x=0; x<FramebufferWrapper::FRAMEBUFFER_WIDTH; x++) {
@@ -41,7 +45,13 @@ int main(int argc, const char* argv[])
     }
 */
     if(binaryMode) {
-
+        while(true) {
+            for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
+                for(int j = 0; j < FramebufferWrapper::FRAMEBUFFER_HEIGHT; j++) {
+                    fwrite(&fb_pointer[FramebufferWrapper::FRAMEBUFFER_WIDTH*j + i], 2, 1, stdout);
+                }
+            }
+        }
     } else {
         while(true) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
@@ -55,7 +65,7 @@ int main(int argc, const char* argv[])
 
     cleanup();
     return 0;
-}
+
 
 void cleanup() {
     fbWrapper->restore();
@@ -64,7 +74,7 @@ void cleanup() {
     delete fbWrapper;
     fbWrapper = NULL;
 
-    logInfo("exiting fbdaemon");
+    logDebug("exiting fbdaemon");
     exit(0);
 }
 
