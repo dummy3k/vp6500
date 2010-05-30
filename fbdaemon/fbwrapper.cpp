@@ -14,10 +14,10 @@
 #define _MODE_565_RGB16BIT(r,g,b) ((b%32) + ((g%64) << 6) + ((r%32) << 11))
 
 int fb_file = 0;
-short* fb_pointer = NULL;
-short* fb_backup_buffer = NULL;
+unsigned short* fb_pointer = NULL;
+unsigned short* fb_backup_buffer = NULL;
 
-short* FramebufferWrapper::open() {
+unsigned short* FramebufferWrapper::open() {
     if(fb_file != 0) {
         logError("fb_open() was called, but fb already open\n");
         return NULL;
@@ -56,7 +56,7 @@ void FramebufferWrapper::close() {
     }
 }
 
-short* FramebufferWrapper::getPointer() {
+unsigned short* FramebufferWrapper::getPointer() {
     return fb_pointer;
 }
 
