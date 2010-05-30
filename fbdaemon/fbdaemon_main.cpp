@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <signal.h>
+#include <string.h>
 
 #include "camera.hpp"
 #include "rpr_redirect.hpp"
@@ -30,7 +31,7 @@ int main(int argc, const char* argv[])
 
     unsigned int x,y;
 
-    const bool binaryMode = true;
+    bool binaryMode = true;
 
     if(argc == 2 && strcmp("--debug", argv[1]) == 0) {
         binaryMode = false;
@@ -48,7 +49,7 @@ int main(int argc, const char* argv[])
         while(true) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
                 for(int j = 0; j < FramebufferWrapper::FRAMEBUFFER_HEIGHT; j++) {
-                    fwrite(&fb_pointer[FramebufferWrapper::FRAMEBUFFER_WIDTH*j + i], 2, 1, stdout);
+                    fwrite(&fb[FramebufferWrapper::FRAMEBUFFER_WIDTH*j + i], 2, 1, stdout);
                 }
             }
         }
@@ -65,7 +66,7 @@ int main(int argc, const char* argv[])
 
     cleanup();
     return 0;
-
+}
 
 void cleanup() {
     fbWrapper->restore();
