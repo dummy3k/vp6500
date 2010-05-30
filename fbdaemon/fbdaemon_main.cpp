@@ -24,7 +24,7 @@ int main(int argc, const char* argv[])
 
     fbWrapper = new FramebufferWrapper();
 
-    short* fb = fbWrapper->open();
+    unsigned short* fb = fbWrapper->open();
 
     fbWrapper->backup();
 
@@ -56,7 +56,7 @@ int main(int argc, const char* argv[])
         while(true) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
                 for(int j = 0; j < FramebufferWrapper::FRAMEBUFFER_HEIGHT; j++) {
-                    printf("%04x", fb_pointer[FramebufferWrapper::FRAMEBUFFER_WIDTH*j + i]);
+                    printf("%04x", fb[FramebufferWrapper::FRAMEBUFFER_WIDTH*j + i]);
                 }
             }
         }

@@ -30,14 +30,14 @@ unsigned short* FramebufferWrapper::open() {
         return NULL;
     }
 
-    fb_pointer = (short*) mmap(0, 2*FRAMEBUFFER_WIDTH*FRAMEBUFFER_HEIGHT, PROT_WRITE, MAP_SHARED , fb_file, 0);
+    fb_pointer = (unsigned short*) mmap(0, 2*FRAMEBUFFER_WIDTH*FRAMEBUFFER_HEIGHT, PROT_WRITE, MAP_SHARED , fb_file, 0);
 
     if(fb_pointer == NULL) {
         logError("fb_open() failed: could not mmap fb\n");
         return NULL;
     }
 
-    fb_backup_buffer = new short[396000];
+    fb_backup_buffer = new unsigned short[396000];
 
     return fb_pointer;
 }
