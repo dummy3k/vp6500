@@ -10,14 +10,6 @@
 #include "camera.hpp"
 #include "log.hpp"
 
-#define		INIT			0x6C01
-#define		SET_CONTRAST		0x6C02
-#define		SET_REGISTER		0x6C03
-#define		START_CAPTURE		0x6C04
-#define		STOP_CAPTURE		0x6C05
-#define		SET_FORMAT		0x6C06
-#define		POWER_ON		0x6C07
-
 void Camera::enableCamera() {
 	logInfo("enabling camera");
 

@@ -1,6 +1,7 @@
 class FramebufferWrapper {
-    const size_t FRAMEBUFFER_WIDTH = 240;
-    const size_t FRAMEBUFFER_HEIGHT = 220;
+    public: 
+    const static size_t FRAMEBUFFER_WIDTH = 240;
+    const static size_t FRAMEBUFFER_HEIGHT = 220;
 
     /**
         opens the framebuffer. afterwards you can use the returned pointer to read and write the framebuffer.
@@ -35,5 +36,5 @@ class FramebufferWrapper {
         @see backup()
     */
 
-    void restore()
+    void restore();
 };

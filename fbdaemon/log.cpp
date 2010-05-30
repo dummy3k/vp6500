@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stdio.h>
 #include "log.hpp"
 
 FILE* pLogFile = NULL;

@@ -13,6 +13,7 @@
 #include "log.hpp"
 
 void ex_program(int sig);
+void cleanup();
 
 FramebufferWrapper* fbWrapper = NULL;
 
@@ -27,33 +28,33 @@ int main(int argc, const char* argv[])
 
     fbWrapper->backup();
 
-    int x,y;
+    unsigned int x,y;
 
-    for(x=0; x<fb_width; x++) {
-        for(y=0; y<fb_height; y++) {
-            short pixel = fb[y*camera_width+x];
+    for(x=0; x<FramebufferWrapper::FRAMEBUFFER_WIDTH; x++) {
+        for(y=0; y<FramebufferWrapper::FRAMEBUFFER_HEIGHT; y++) {
+            short pixel = fb[y*FramebufferWrapper::FRAMEBUFFER_HEIGHT+x];
             logInfo("pixel at [%d, %d] is %04X", x,y,pixel);
         }
     }
 
     cleanup();
-	return 0;
+    return 0;
 }
 
 void cleanup() {
-   fbWrapper->restore();
+    fbWrapper->restore();
     fbWrapper->close();
 
     delete fbWrapper;
-    fbwrapper = NULL;
+    fbWrapper = NULL;
 
-	logInfo("exiting fbdaemon");
-	exit(0);
+    logInfo("exiting fbdaemon");
+    exit(0);
 }
 
 void ex_program(int sig) {
-	logWarn("Catched signal: %d. Cleaning up ...", sig);
-	signal(SIGINT, SIG_DFL);
+    logWarn("Catched signal: %d. Cleaning up ...", sig);
+    signal(SIGINT, SIG_DFL);
     cleanup();
 }
 

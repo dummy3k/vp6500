@@ -32,17 +32,23 @@ PROJECT=fbdaemon
 
 all: $(PROJECT)
 
-$(PROJECT): main.o camera.o rpr_redirect.o
-	$(CPP) $(ROMLDFLAGS) -o $(PROJECT) main.o camera.o rpr_redirect.o
+$(PROJECT): fbdaemon_main.o camera.o rpr_redirect.o log.o fbwrapper.o
+	$(CPP) $(ROMLDFLAGS) -o $(PROJECT) fbdaemon_main.o camera.o rpr_redirect.o log.o fbwrapper.o
 
-main.o:
-	$(CPP) $(CFLAGS) $(THUMBFLAGS) -L $(LIBPATH) -o main.o main.cpp
+fbdaemon_main.o:
+	$(CPP) $(CFLAGS) $(THUMBFLAGS) -L $(LIBPATH) -o fbdaemon_main.o fbdaemon_main.cpp
 
 camera.o:
 	$(CPP) $(CFLAGS) $(THUMBFLAGS) -L $(LIBPATH) -o camera.o camera.cpp
 
 rpr_redirect.o:
 	$(CPP) $(CFLAGS) $(THUMBFLAGS) -L $(LIBPATH) -o rpr_redirect.o rpr_redirect.cpp
+
+fbwrapper.o:
+	$(CPP) $(CFLAGS) $(THUMBFLAGS) -L $(LIBPATH) -o fbwrapper.o fbwrapper.cpp
+
+log.o:
+	$(CPP) $(CFLAGS) $(THUMBFLAGS) -L $(LIBPATH) -o log.o log.cpp
 
 clean:
 	$(RM) -v $(PROJECT) *.o *.elf *.bin *.hex *~

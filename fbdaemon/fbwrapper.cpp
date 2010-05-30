@@ -19,22 +19,22 @@ short* fb_backup_buffer = NULL;
 
 short* FramebufferWrapper::open() {
     if(fb_file != 0) {
-        printf("fb_open() was called, but fb already open\n");
-        return null;
+        logError("fb_open() was called, but fb already open\n");
+        return NULL;
     }
 
-    fb_file = open("/dev/fb", O_RDWR);
+    fb_file = ::open("/dev/fb", O_RDWR);
 
     if(fb_file == NULL) {
-        printf("fb_open() failed: could not open /dev/fb for rw\n");
-        return null;
+        logError("fb_open() failed: could not open /dev/fb for rw\n");
+        return NULL;
     }
 
-    fb_pointer = mmap(0, 2*FRAMEBUFFER_WIDTH*FRAMEBUFFER_HEIGHT, PROT_WRITE, MAP_SHARED , fb_nr, 0);
+    fb_pointer = (short*) mmap(0, 2*FRAMEBUFFER_WIDTH*FRAMEBUFFER_HEIGHT, PROT_WRITE, MAP_SHARED , fb_file, 0);
 
     if(fb_pointer == NULL) {
-        printf("fb_open() failed: could not mmap fb\n");
-        return null;
+        logError("fb_open() failed: could not mmap fb\n");
+        return NULL;
     }
 
     fb_backup_buffer = new short[396000];
@@ -44,12 +44,12 @@ short* FramebufferWrapper::open() {
 
 void FramebufferWrapper::close() {
     if(fb_pointer != NULL) {
-        munmap((void*)fb_pointer, 2*FRAMEBUFFER_WIDTH*FRAMEBUFFER_HEIGHT) == -1)
+        munmap((void*)fb_pointer, 2 * FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
     }
 
-    if(fb_file != 0 && close(fd) == -1)
+    if(fb_file != 0 && ::close(fb_file) == -1)
     {
-        printf("can't close /dev/sensor\r\n");
+        logError("can't close /dev/sensor\r\n");
     } else {
         delete fb_backup_buffer;
         fb_backup_buffer = NULL;
@@ -62,7 +62,7 @@ short* FramebufferWrapper::getPointer() {
 
 void FramebufferWrapper::backup() {
     if(fb_pointer == NULL) {
-        printf("fb_backup(): please call fb_open() first!\n");
+        logError("fb_backup(): please call fb_open() first!\n");
         return ;
     }
 
@@ -74,7 +74,7 @@ void FramebufferWrapper::backup() {
 
 void FramebufferWrapper::restore() {
     if(fb_pointer == NULL) {
-        printf("fb_backup(): please call fb_open() first!\n");
+        logError("fb_backup(): please call fb_open() first!\n");
         return ;
     }
 
