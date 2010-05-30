@@ -7,6 +7,7 @@
 #include <sys/ioctl.h>
 #include <signal.h>
 #include <string.h>
+#include <time.h>
 
 #include "camera.hpp"
 #include "rpr_redirect.hpp"
@@ -46,13 +47,18 @@ int main(int argc, const char* argv[])
     }
 */
     if(binaryMode) {
-        while(true) {
+        time_t start = time();
+        const int runs = 100;
+
+        for(int c=0; c<runs; c++) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
                 for(int j = 0; j < FramebufferWrapper::FRAMEBUFFER_HEIGHT; j++) {
                     fwrite(&fb[FramebufferWrapper::FRAMEBUFFER_WIDTH*j + i], 2, 1, stdout);
                 }
             }
         }
+
+        logInfo("%d runs in %d ms", runs, time() - start);
     } else {
         while(true) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
