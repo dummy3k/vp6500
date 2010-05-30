@@ -1,5 +1,8 @@
-const size_t camera_width = 352;
-const size_t camera_height = 288;
+class Camera {
+    public const size_t CAMERA_WIDTH = 352;
+    public const size_t CAMERA_HEIGHT = 288;
 
-void enable_camera();
-void disable_camera();
+    public void enableCamera();
+    public void disableCamera();
+};
+

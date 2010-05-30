@@ -2,18 +2,30 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
 	<File name="camera.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="186" topLine="0" />
+		<Cursor position="1721" topLine="53" />
 	</File>
 	<File name="camera.hpp" open="1" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="107" topLine="0" />
 	</File>
 	<File name="fbdaemon_main.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="544" topLine="0" />
+		<Cursor position="165" topLine="0" />
+	</File>
+	<File name="fbwrapper.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="431" topLine="0" />
+	</File>
+	<File name="fbwrapper.hpp" open="1" top="0" tabpos="8">
+		<Cursor position="569" topLine="0" />
+	</File>
+	<File name="log.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="17" topLine="0" />
+	</File>
+	<File name="log.hpp" open="1" top="0" tabpos="6">
+		<Cursor position="125" topLine="0" />
 	</File>
 	<File name="rpr_redirect.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="4331" topLine="91" />
+		<Cursor position="5903" topLine="152" />
 	</File>
 	<File name="rpr_redirect.hpp" open="1" top="0" tabpos="4">
-		<Cursor position="80" topLine="0" />
+		<Cursor position="61" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

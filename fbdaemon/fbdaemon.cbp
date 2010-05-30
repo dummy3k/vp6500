@@ -36,6 +36,10 @@
 		<Unit filename="camera.cpp" />
 		<Unit filename="camera.hpp" />
 		<Unit filename="fbdaemon_main.cpp" />
+		<Unit filename="fbwrapper.cpp" />
+		<Unit filename="fbwrapper.hpp" />
+		<Unit filename="log.cpp" />
+		<Unit filename="log.hpp" />
 		<Unit filename="rpr_redirect.cpp" />
 		<Unit filename="rpr_redirect.hpp" />
 		<Extensions>

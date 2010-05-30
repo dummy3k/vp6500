@@ -8,6 +8,7 @@
 #include <signal.h>
 
 #include "rpr_redirect.hpp"
+#include "log.hpp"
 
 struct _fmt_struct
 {
@@ -64,7 +65,7 @@ u_int32_t backup_rgb2 = 0;
 // set the PRP registers, values taken from the product test script
 void set_prp(u_int32_t dest1, u_int32_t dest2)
 {
-	printf("set_prp(0x%08x, 0x%08x)\n", dest1, dest2);
+	logDebug("set_prp(0x%08x, 0x%08x)", dest1, dest2);
 	prp_regs->PRP_CNTL = 0x3234;
 	prp_regs->PRP_SRC_PIXEL_FORMAT_CNTL = 0x2CA00565;
 	prp_regs->PRP_CH1_PIXEL_FORMAT_CNTL = 0x2CA00565;
@@ -109,7 +110,7 @@ void _redirect_camera_to_fb(int stop) {
 	fd = open("/dev/mem", O_RDWR);
 	if(fd == -1)
 	{
-		printf("can't open /dev/mem\r\n");
+		logError("can't open /dev/mem");
 		goto EXIT;
 	}
 
@@ -118,17 +119,17 @@ void _redirect_camera_to_fb(int stop) {
 	// get the pagesize
 	psize = getpagesize();
 
-	printf("pagesize = %i\r\n", psize);
+	logDebug("pagesize = %i", psize);
 
 	// calculate the offset from mapable memory address (multiple of pagesize) to the register holding the frame buffer address
 	offset = FB_START_REG % psize;
-	printf("fbreg offset = %X\r\n", offset);
+	logDebug("fbreg offset = %X", offset);
 
 	// map that register to a local pointer
 	mem_ptr = mmap((void*) 0x00, offset+4, PROT_READ | PROT_WRITE, MAP_SHARED, fd, FB_START_REG-offset);
 	if(mem_ptr == (void*)-1)
 	{
-		printf("can't map FB START registers\r\n");
+		logError("can't map FB START registers");
 		goto EXIT;
 	}
 
@@ -142,23 +143,23 @@ void _redirect_camera_to_fb(int stop) {
 
 	camera_buffer += camera_offset;
 
-	printf("camera offset: %8X\n", camera_offset);
-	printf("camera resolution %dx%d\n", camera_width, camera_height);
+	logDebug("camera offset: %8X", camera_offset);
+	logDebug("camera resolution %dx%d", camera_width, camera_height);
 
 	//camera_buffer -= camera_buffer % psize;
 
-	printf("fbreg base = %8X\r\n", fb_base);
-	printf("camera base = %8X\r\n", camera_buffer);
+	logDebug("fbreg base = %8X", fb_base);
+	logDebug("camera base = %8X", camera_buffer);
 
 	// unmap the memory
 	if(munmap((void*)mem_ptr, offset+4) == -1)
 	{
-		printf("can't unmap FB START registers\r\n");
+		logError("can't unmap FB START registers");
 		goto EXIT;
 	}
 
 	offset = PRP_BASE % psize;
-	printf("prpreg offset = %8X\n", offset);
+	logDebug("prpreg offset = %8X", offset);
 
 	// map local pointer to the calculated base address
 	mem_ptr = mmap((void*) 0x00, offset+132, PROT_READ | PROT_WRITE, MAP_SHARED, fd, PRP_BASE-offset);
@@ -168,21 +169,21 @@ void _redirect_camera_to_fb(int stop) {
 
 	if(mem_ptr == (void*)-1)
 	{
-		printf("can't map PRP registers\r\n");
+		logError("can't map PRP registers");
 		goto EXIT;
 	}
 
-	printf("prp regs base %8X\r\n", (u_int32_t)prp_regs);
+	logDebug("prp regs base %8X", (u_int32_t)prp_regs);
 
 
     if(stop == 0) {
-        printf("enabling camera redirect\n");
+        logInfo("enabling camera redirect");
 
         backup_rgb1 = prp_regs->PRP_DEST_RGB1_PTR;
         backup_rgb2 = prp_regs->PRP_DEST_RGB2_PTR;
         set_prp(camera_buffer, camera_buffer);
     } else {
-        printf("disabling camera redirect\n");
+        logInfo("disabling camera redirect");
 
         set_prp(backup_rgb1, backup_rgb2);
         backup_rgb1 = 0;
@@ -194,7 +195,7 @@ void _redirect_camera_to_fb(int stop) {
 	// unmap the memory
 	if(munmap((void*)mem_ptr, offset+4) == -1)
 	{
-		printf("can't unmap FB START registers\r\n");
+		logError("can't unmap FB START registers");
 		goto EXIT;
 	}
 
@@ -202,7 +203,7 @@ EXIT:
 	// close the memory device
 	if(close(fd) == -1)
 	{
-		printf("can't close /dev/mem\r\n");
+		logError("can't close /dev/mem");
 	}
 }
 

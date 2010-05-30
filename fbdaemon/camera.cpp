@@ -8,6 +8,7 @@
 #include <signal.h>
 
 #include "camera.hpp"
+#include "log.hpp"
 
 #define		INIT			0x6C01
 #define		SET_CONTRAST		0x6C02
@@ -17,8 +18,8 @@
 #define		SET_FORMAT		0x6C06
 #define		POWER_ON		0x6C07
 
-void enable_camera() {
-	printf("enabling camera\n");
+void Camera::enableCamera() {
+	logInfo("enabling camera");
 
 	int fd, result;
 
@@ -28,8 +29,8 @@ void enable_camera() {
 
 	contrast = 3;
 
-	format.width = 352;
-	format.height = 288;
+	format.width = CAMERA_WIDTH;
+	format.height = CAMERA_HEIGHT;
 	format.unknown1 = 0;
 	format.unknown2 = 0;
 
@@ -38,65 +39,65 @@ void enable_camera() {
 	fd = open("/dev/sensor", O_RDWR);
 	if(fd == -1)
 	{
-		printf("can't open /dev/sensor\r\n");
+		logError("can't open /dev/sensor");
 		goto EXIT;
 	}
 
 	result = ioctl(fd, POWER_ON);			// power on IOCTL
 	if(result != 0)
-		printf("error in power on IOCTL, got %i\r\n",result);
+		logError("error in power on IOCTL, got %i",result);
 
 
 	result = ioctl(fd, INIT, &initreg);		// init IOCTL
 	if(result != 0)
-		printf("error in init IOCTL, got %i\r\n",result);
+		logError("error in init IOCTL, got %i",result);
 
 	result = ioctl(fd, SET_FORMAT, &format);	// set format IOCTL
 	if(result != 0)
-		printf("error in set format IOCTL, got %i\r\n",result);
+		logError("error in set format IOCTL, got %i",result);
 
 	result = ioctl(fd, START_CAPTURE);		// cpature start IOCTL
 	if(result != 0)
-		printf("error in start capture IOCTL, got %i\r\n",result);
+		logError("error in start capture IOCTL, got %i",result);
 
 	result = ioctl(fd, SET_CONTRAST, contrast);	// contrast IOCTL
 	if(result != 0)
-		printf("error in set contrast IOCTL, got %i\r\n",result);
+		logError("error in set contrast IOCTL, got %i",result);
 
 /*
 	result = ioctl(fd, STOP_CAPTURE);		// capture stop IOCTL
 	if(result != 0)
-		printf("error in stop capture IOCTL, got %i\r\n",result);
+		logError("error in stop capture IOCTL, got %i",result);
 */
 
 EXIT:
 	if(close(fd) == -1)
 	{
-		printf("can't close /dev/sensor\r\n");
+		logError("can't close /dev/sensor");
 	}
 }
 
 
-void disable_camera() {
-	printf("disabling camera...\n");
+void Camera::disableCamera() {
+	logDebug("disabling camera...");
     int fd, result;
 
     fd = open("/dev/sensor", O_RDWR);
     if(fd == -1)
     {
-            printf("can't open /dev/sensor\r\n");
+            logError("can't open /dev/sensor");
             goto EXIT;
     }
 
     result = ioctl(fd, STOP_CAPTURE);               // capture stop IOCTL
     if(result != 0)
-        printf("error in stop capture IOCTL, got %i\r\n",result);
+        logError("error in stop capture IOCTL, got %i",result);
 	else
-		printf("successfully disabled camera device with result: %d \n", result);
+		logDebug("successfully disabled camera device with result: %d ", result);
 
 EXIT:
         if(close(fd) == -1)
         {
-                printf("can't close /dev/sensor\r\n");
+            logError("can't close /dev/sensor");
         }
 }
