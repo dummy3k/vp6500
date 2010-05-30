@@ -50,7 +50,8 @@ int main(int argc, const char* argv[])
         time_t start = time(NULL);
         const int runs = 100;
 
-        for(int c=0; c<runs; c++) {
+        //for(int c=0; c<runs; c++) {
+	while(true) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
                 for(int j = 0; j < FramebufferWrapper::FRAMEBUFFER_HEIGHT; j++) {
                     fwrite(&fb[FramebufferWrapper::FRAMEBUFFER_WIDTH*j + i], 2, 1, stdout);
@@ -58,7 +59,7 @@ int main(int argc, const char* argv[])
             }
         }
 
-        logInfo("%d runs in %d ms", runs, time(NULL) - start);
+        logInfo("%d runs in %d seconds", runs, time(NULL) - start);
     } else {
         while(true) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
