@@ -17,6 +17,24 @@ def convert_rgb565(filename, showImage=False, out_file=None):
         img.save(out_file)
         print "saved image: %s" % out_file
 
+def convert_one(raw_ushort):
+    r = raw_ushort >> (6 + 5)
+    g = raw_ushort >> 5 & 0b111111
+    b = raw_ushort & 0b11111
+
+    r *= 8
+    g *= 4
+    b *= 8
+    if r > 255 or g > 255 or b > 255:
+        print "bad values (%s, %s, %s)" % (r, g, b)
+        return
+
+    color = r
+    color += g << 8
+    color += b << 16
+
+    return color
+
 def __convert_rgb565__(buffer, showImage=False):
     img = Image.new("RGB", (240, 220))
     putpixel = img.putpixel

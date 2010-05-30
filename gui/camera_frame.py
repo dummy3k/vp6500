@@ -1,8 +1,11 @@
 import logging
+import Image, sys, struct
 import os, tempfile
 import socket
 import wx
 from threading import *
+from datetime import datetime
+from StringIO import StringIO
 
 import convert_rgb565
 
@@ -101,6 +104,64 @@ class CameraFrame(wx.Frame):
             return
 
         log.debug("OnMouse()")
+        host = "192.168.120.105"
+        port = 31337
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((host, port))
+
+        BUFFER_SIZE = 1024
+        img = Image.new("RGB", (240, 220))
+        putpixel = img.putpixel
+        y = 0
+        x = 0
+        last_ts = datetime.now()
+        #~ data = s.recv(BUFFER_SIZE)
+        while True:
+            raw_buffer = s.recv(BUFFER_SIZE)
+            #~ log.debug("raw_buffer: %s" % len(raw_buffer))
+
+            raw_ushort = None
+            #~ mybuffer = StringIO(raw_buffer)
+            my_fmt = "%dH" % (len(raw_buffer) / 2, )
+            raw_ushort_array = struct.unpack_from(my_fmt, raw_buffer)
+            #~ log.debug("raw_ushort_array: %s" % len(raw_ushort_array))
+            #~ continue
+
+            for raw_ushort in raw_ushort_array:
+                ##~ raw = raw_buffer[index:index + 2]
+                ##~ raw_ushort = struct.unpack('H', raw)[0]
+
+                color = convert_rgb565.convert_one(raw_ushort)
+                putpixel( (y, x), color)
+                y += 1
+                if y >= 240:
+                    y = 0
+                    x += 1
+
+                if x >= 220:
+                    y = 0
+                    x = 0
+
+                    log.debug("*** NEXT COLUMN ***")
+                    tmp_file = tempfile.mkstemp()[1]
+                    output = open(tmp_file, 'wb')
+                    img.save(output, 'bmp')
+                    output.close()
+    
+                    self.image = wx.Image(tmp_file, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+                    os.remove(tmp_file)
+    
+                    self.Update()
+#~ 
+                    delta = datetime.now() - last_ts
+                    last_ts = datetime.now()
+                    log.debug("delta: %s" % delta)
+                    #~ return
+                    
+                
+                #~ log.debug("data: %s" % data)
+        s.close()
+
         return
         
         #~ infile = open('/tmp/blah4', 'rb')
