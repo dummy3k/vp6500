@@ -1,50 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
+
 //~ #define __KERNEL__
 //~ #include <linux>
 //~ #include <videodevx/videodev.h>
 //~ #include <linux/videodev2.h>
 //~ #include <media/v4l2-chip-ident.h>
 
-enum {
-	/* general idents: reserved range 0-49 */
-	V4L2_IDENT_NONE      = 0,       /* No chip matched */
-    V4L2_IDENT_OV7660 = 253,
-};
+//enum {
+	///* general idents: reserved range 0-49 */
+	//V4L2_IDENT_NONE      = 0,       /* No chip matched */
+    //V4L2_IDENT_OV7660 = 253,
+//};
+
+//~ fromhttp://www.mikrocontroller.net/topic/172616#1657696
+#define IOTCL_INIT      0x6C01   //init the sensor
+#define IOTCL_CONTRAST  0x6C02   // set the contrast, values range from 0 to 4 inclusive
+#define IOTCL_CAPREG    0x6C03   // set the cameras register. no idea what that does
+#define IOTCL_START     0x6C04   // start capture
+#define IOTCL_STOP      0x6C05   // stop capture
+#define IOTCL_FORMAT    0x6C06   // set format, want's a struct
+                                 // consisting of uint16's for width,
+                                 // height, and two other, yet unknown
+                                 // parameters
+#define IOTCL_POWER_ON  0x6C07   // power on the camera
+
+void echo(char* buffer) {
+    printf("%s\n", buffer);
+}
 
 int main(void) {
-
-    //~ extern void v4l2_version(int *major, int *minor);
-    //~ int major = v4l2_major_number;
-    //~ int minor = -1;
-    //~ v4l2_version(major, minor);
-    //~ printf("%d.%d", major, minor);
-    printf("%s\n", "Start");
+    echo("Start");
     FILE* myfile = fopen("/dev/sensor", "rw");
-    printf("%s\n", "Dev open!");
+    printf("Dev open, addr: %i\n", myfile);
+    int retval = ioctl(myfile, 0x6C01);
+    printf("retval %i\n", retval);
 
-    int dest_size = 640 * 480;
-    //~ int buffer_size = 1024;
-    int buffer_size = dest_size;
-    char buffer[buffer_size];
-    int counter = 0;
-    int retval;
-    while (!feof(myfile) && counter < dest_size)
-    {
-        retval = fread(buffer, buffer_size, 1, myfile);
-        printf("retval %i\n", retval);
+    //int dest_size = 640 * 480;
+    ////~ int buffer_size = 1024;
+    //int buffer_size = dest_size;
+    //char buffer[buffer_size];
+    //int counter = 0;
+    //int retval;
+    //while (!feof(myfile) && counter < dest_size)
+    //{
+        //retval = fread(buffer, buffer_size, 1, myfile);
+        //printf("retval %i\n", retval);
 
-        counter += buffer_size;
-        printf("Read %i, %i\n", counter, buffer);
-        //~ fwrite(buffer, buffer_size, buffer_size, stdout);
+        //counter += buffer_size;
+        //printf("Read %i, %i\n", counter, buffer);
+        ////~ fwrite(buffer, buffer_size, buffer_size, stdout);
 
-        //~ if (counter > 10240) break;
-        //~ printf("%s",buffer);
-    }
+        ////~ if (counter > 10240) break;
+        ////~ printf("%s",buffer);
+    //}
 
     
-    retval = ioctl(myfile, V4L2_IDENT_OV7660, buffer);
-    printf("retval %i\n", retval);
+    //~ retval = ioctl(myfile, V4L2_IDENT_OV7660, buffer);
+    //~ printf("retval %i\n", retval);
     //~ int retval = ioctl(file, 253, 0);
     fclose(myfile);
     
