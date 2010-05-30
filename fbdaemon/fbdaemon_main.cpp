@@ -47,7 +47,7 @@ int main(int argc, const char* argv[])
     }
 */
     if(binaryMode) {
-        time_t start = time();
+        time_t start = time(NULL);
         const int runs = 100;
 
         for(int c=0; c<runs; c++) {
@@ -58,7 +58,7 @@ int main(int argc, const char* argv[])
             }
         }
 
-        logInfo("%d runs in %d ms", runs, time() - start);
+        logInfo("%d runs in %d ms", runs, time(NULL) - start);
     } else {
         while(true) {
             for(int i = 0; i < FramebufferWrapper::FRAMEBUFFER_WIDTH; i++) {
