@@ -1,3 +1,5 @@
 *.profile
 *.pyc
 *.o
+*.env
+*.gz

@@ -1,5 +1,6 @@
 import logging
 import os, tempfile
+import socket
 import wx
 from threading import *
 
@@ -57,7 +58,7 @@ class CameraFrame(wx.Frame):
         log.debug("PovPictureWindow Init")
         self.image = None
         self.worker = WorkerThread(self)
-        self.worker.start()
+        #~ self.worker.start()
 
         self.OnSize(None)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
@@ -99,6 +100,9 @@ class CameraFrame(wx.Frame):
         if not event.LeftDown():
             return
 
+        log.debug("OnMouse()")
+        return
+        
         #~ infile = open('/tmp/blah4', 'rb')
         #~ img = convert_rgb565.__convert_rgb565__(infile, False)
         #~ infile.close()
